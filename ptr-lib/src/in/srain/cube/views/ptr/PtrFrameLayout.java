@@ -314,8 +314,11 @@ public class PtrFrameLayout extends ViewGroup {
                 float offsetX = mPtrIndicator.getOffsetX();
                 float offsetY = mPtrIndicator.getOffsetY();
 
-                if (mDisableWhenHorizontalMove && !mPreventForHorizontal && (Math.abs(offsetX) > mPagingTouchSlop && Math.abs(offsetX) > Math.abs(offsetY))) {
-                    if (mPtrIndicator.isInStartPosition()) {
+                if (mDisableWhenHorizontalMove && !mPreventForHorizontal && Math.abs(offsetX) > Math.abs(offsetY)) {
+                    //判断手势是否在水平滚动的view中，如果没有正常下拉刷新，如果水平上，直接阻挡
+                    boolean isTouch = mHorizontalMoveView != null &&
+                            (mHorizontalMoveView.getCurrentTouchEvent() == MotionEvent.ACTION_DOWN || mHorizontalMoveView.getCurrentTouchEvent() == MotionEvent.ACTION_MOVE);
+                    if (mPtrIndicator.isInStartPosition() && isTouch) {
                         mPreventForHorizontal = true;
                     }
                 }
@@ -343,6 +346,22 @@ public class PtrFrameLayout extends ViewGroup {
                 }
         }
         return dispatchTouchEventSupper(e);
+    }
+
+    /**
+     * 声明全局变量
+     * 水平滑动的视图
+     */
+    private HorizontalMoveView mHorizontalMoveView;
+
+    /**
+     * 设置冲突手势的view，当手势在此view中，才阻断其事件
+     * 提高用户体验
+     *
+     * @param horizontalMoveView horizontalMoveView 水平滑动的view
+     */
+    public void setHorizontalMoveView(HorizontalMoveView horizontalMoveView) {
+        mHorizontalMoveView = horizontalMoveView;
     }
 
     /**
