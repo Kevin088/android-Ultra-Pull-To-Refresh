@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.*;
 import android.widget.Scroller;
 import android.widget.TextView;
+
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
 import in.srain.cube.views.ptr.util.PtrCLog;
 
@@ -313,8 +314,8 @@ public class PtrFrameLayout extends ViewGroup {
                 mPtrIndicator.onMove(e.getX(), e.getY());
                 float offsetX = mPtrIndicator.getOffsetX();
                 float offsetY = mPtrIndicator.getOffsetY();
-
-                if (mDisableWhenHorizontalMove && !mPreventForHorizontal && Math.abs(offsetX) > Math.abs(offsetY)) {
+                //Math.abs(offsetX) > Math.abs(offsetY) * 4 提高下拉判断
+                if (mDisableWhenHorizontalMove && !mPreventForHorizontal && Math.abs(offsetX) > Math.abs(offsetY) * 4) {
                     //判断手势是否在水平滚动的view中，如果没有正常下拉刷新，如果水平上，直接阻挡
                     boolean isTouch = mHorizontalMoveView != null &&
                             (mHorizontalMoveView.getCurrentTouchEvent() == MotionEvent.ACTION_DOWN || mHorizontalMoveView.getCurrentTouchEvent() == MotionEvent.ACTION_MOVE);
